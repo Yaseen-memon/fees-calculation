@@ -116,7 +116,7 @@ const FeesCalculator = () => {
 
             <form onSubmit={handleCalculate}>
                 <div className="form-group">
-                    <label>Fees (₹):</label>
+                    <label>Fees</label>
                     <input
                         type="number"
                         value={fees}
@@ -166,9 +166,9 @@ const FeesCalculator = () => {
             {totalAmount !== null && (
                 <div className="result-box">
                     <p><strong>Months Late:</strong> {monthsLate}</p>
-                    <p><strong>Fees:</strong> ₹{Number(fees).toFixed(2)}</p>
-                    <p><strong>Fine:</strong> ₹{fineAmount.toFixed(2)}</p>
-                    <h3>Total Payable: ₹{totalAmount.toFixed(2)}</h3>
+                    <p><strong>Fees:</strong> {Number(fees).toFixed(2)}</p>
+                    <p><strong>Fine:</strong>{fineAmount.toFixed(2)}</p>
+                    <h3>Total Payable: {totalAmount.toFixed(2)}</h3>
                 </div>
             )}
         </div>
