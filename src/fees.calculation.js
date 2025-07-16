@@ -5,9 +5,9 @@ const FeesCalculator = () => {
   const [dueDate, setDueDate] = useState('');
   const [finePercentage, setFinePercentage] = useState('');
   const [submitDate, setSubmitDate] = useState('');
-  const [totalAmount, setTotalAmount] = useState(null);
   const [monthsLate, setMonthsLate] = useState(0);
   const [fineAmount, setFineAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(null);
 
   const calculateLateMonths = (due, submit) => {
     const dueD = new Date(due);
@@ -37,15 +37,79 @@ const FeesCalculator = () => {
     setTotalAmount(total);
   };
 
-  const isStepReady =
-    fees && dueDate && finePercentage && submitDate;
+  const isStepReady = fees && dueDate && finePercentage && submitDate;
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Fees Calculator with Fine</h2>
+    <div className="calculator-container">
+      <style>{`
+        .calculator-container {
+          max-width: 450px;
+          margin: 40px auto;
+          padding: 30px;
+          background: #f9f9f9;
+          border-radius: 10px;
+          box-shadow: 0 0 15px rgba(0,0,0,0.1);
+          font-family: sans-serif;
+        }
+        h2 {
+          text-align: center;
+          color: #1e90ff;
+          margin-bottom: 20px;
+        }
+        .form-group {
+          margin-bottom: 15px;
+        }
+        label {
+          display: block;
+          font-weight: 600;
+          margin-bottom: 5px;
+        }
+        input[type="number"],
+        input[type="date"] {
+          width: 100%;
+          padding: 10px;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+        }
+        input:disabled {
+          background-color: #eee;
+        }
+        button {
+          width: 100%;
+          padding: 12px;
+          background-color: #1e90ff;
+          color: white;
+          font-weight: bold;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-top: 10px;
+        }
+        button:disabled {
+          background-color: #999;
+        }
+        .result-box {
+          margin-top: 25px;
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .result-box p {
+          margin: 5px 0;
+        }
+        .result-box h3 {
+          margin-top: 15px;
+          color: #1e90ff;
+        }
+      `}</style>
+
+      <h2>Fees Calculator</h2>
+
       <form onSubmit={handleCalculate}>
-        <div>
-          <label>Fees</label><br />
+        <div className="form-group">
+          <label>Fees</label>
           <input
             type="number"
             value={fees}
@@ -54,8 +118,8 @@ const FeesCalculator = () => {
           />
         </div>
 
-        <div>
-          <label>Due Date:</label><br />
+        <div className="form-group">
+          <label>Due Date:</label>
           <input
             type="date"
             value={dueDate}
@@ -65,8 +129,8 @@ const FeesCalculator = () => {
           />
         </div>
 
-        <div>
-          <label>Fine Percentage per Month (%):</label><br />
+        <div className="form-group">
+          <label>Fine % per Month:</label>
           <input
             type="number"
             value={finePercentage}
@@ -76,8 +140,8 @@ const FeesCalculator = () => {
           />
         </div>
 
-        <div>
-          <label>Submit Date:</label><br />
+        <div className="form-group">
+          <label>Submit Date:</label>
           <input
             type="date"
             value={submitDate}
@@ -93,7 +157,7 @@ const FeesCalculator = () => {
       </form>
 
       {totalAmount !== null && (
-        <div style={{ marginTop: '20px' }}>
+        <div className="result-box">
           <p><strong>Months Late:</strong> {monthsLate}</p>
           <p><strong>Fees:</strong> {Number(fees).toFixed(2)}</p>
           <p><strong>Fine:</strong> {fineAmount.toFixed(2)}</p>
