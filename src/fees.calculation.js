@@ -1,54 +1,59 @@
 import React, { useState } from 'react';
 
 const FeesCalculator = () => {
-    const [fees, setFees] = useState('');
-    const [dueDate, setDueDate] = useState('');
-    const [finePercentage, setFinePercentage] = useState('');
-    const [submitDate, setSubmitDate] = useState('');
-    const [totalAmount, setTotalAmount] = useState(null);
-    const [monthsLate, setMonthsLate] = useState(0);
-    const [fineAmount, setFineAmount] = useState(0);
+  const [fees, setFees] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [finePerMonth, setFinePerMonth] = useState('');
+  const [submitDate, setSubmitDate] = useState('');
+  const [totalAmount, setTotalAmount] = useState(null);
+  const [monthsLate, setMonthsLate] = useState(0);
+  const [fineAmount, setFineAmount] = useState(0);
 
-    // ✅ Correct logic to calculate number of months between due and submit date
-    const calculateLateMonths = (due, submit) => {
-        const dueD = new Date(due);
-        const submitD = new Date(submit);
+  const calculateLateMonths = (due, submit) => {
+    const dueD = new Date(due);
+    const submitD = new Date(submit);
 
-        if (submitD <= dueD) return 0;
+    if (submitD <= dueD) return 0;
 
-        let months =
-            (submitD.getFullYear() - dueD.getFullYear()) * 12 +
-            (submitD.getMonth() - dueD.getMonth());
+    let months =
+      (submitD.getFullYear() - dueD.getFullYear()) * 12 +
+      (submitD.getMonth() - dueD.getMonth());
 
-        // 👉 If submit date is **on or after** the same day of the due date → count extra month
-        if (submitD.getDate() >= dueD.getDate()) {
-            months += 1;
-        }
+    if (submitD.getDate() >= dueD.getDate()) {
+      months += 1;
+    }
 
-        return months;
-    };
+    return months;
+  };
+
+  const handleCalculate = (e) => {
+    e.preventDefault();
+
+    const lateMonths = calculateLateMonths(dueDate, submitDate);
+    setMonthsLate(lateMonths);
+
+    const fine = Number(finePerMonth) * lateMonths;
+    setFineAmount(fine);
+
+    const total = Number(fees) + fine;
+    setTotalAmount(total);
+  };
+  const handleClear = () => {
+    setFees('');
+    setDueDate('');
+    setSubmitDate('');
+    setFinePerMonth('');
+    setFineAmount(0);
+    setTotalAmount(null);
+    setMonthsLate(0);
+  };
 
 
-    const handleCalculate = (e) => {
-        e.preventDefault();
+  const isStepReady = fees && dueDate && finePerMonth && submitDate;
 
-        const lateMonths = calculateLateMonths(dueDate, submitDate);
-        setMonthsLate(lateMonths);
-
-        // ✅ Fine = (fees * fine%) * months late
-        const fine = (Number(fees) * Number(finePercentage) * lateMonths) / 100;
-        setFineAmount(fine);
-
-        const total = Number(fees) + fine;
-        setTotalAmount(total);
-    };
-
-    const isStepReady = fees && dueDate && finePercentage && submitDate;
-
-    return (
-        <div className="calculator-container">
-            {/* Embedded CSS */}
-            <style>{`
+  return (
+    <div className="calculator-container">
+      <style>{`
         .calculator-container {
           max-width: 450px;
           margin: 40px auto;
@@ -112,67 +117,73 @@ const FeesCalculator = () => {
         }
       `}</style>
 
-            <h2>Fees Calculator with Fine</h2>
+      <h2>Fees Calculator with Fixed Fine</h2>
 
-            <form onSubmit={handleCalculate}>
-                <div className="form-group">
-                    <label>Fees</label>
-                    <input
-                        type="number"
-                        value={fees}
-                        onChange={(e) => setFees(e.target.value)}
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Due Date:</label>
-                    <input
-                        type="date"
-                        value={dueDate}
-                        onChange={(e) => setDueDate(e.target.value)}
-                        required
-                        disabled={!fees}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Fine % per Month:</label>
-                    <input
-                        type="number"
-                        value={finePercentage}
-                        onChange={(e) => setFinePercentage(e.target.value)}
-                        required
-                        disabled={!dueDate}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label>Submit Date:</label>
-                    <input
-                        type="date"
-                        value={submitDate}
-                        onChange={(e) => setSubmitDate(e.target.value)}
-                        required
-                        disabled={!finePercentage}
-                    />
-                </div>
-
-                <button type="submit" disabled={!isStepReady}>
-                    Calculate Total
-                </button>
-            </form>
-
-            {totalAmount !== null && (
-                <div className="result-box">
-                    <p><strong>Months Late:</strong> {monthsLate}</p>
-                    <p><strong>Fees:</strong> {Number(fees).toFixed(2)}</p>
-                    <p><strong>Fine:</strong>{fineAmount.toFixed(2)}</p>
-                    <h3>Total Payable: {totalAmount.toFixed(2)}</h3>
-                </div>
-            )}
+      <form onSubmit={handleCalculate}>
+        <div className="form-group">
+          <label>Fees</label>
+          <input
+            type="number"
+            value={fees}
+            onChange={(e) => setFees(e.target.value)}
+            required
+          />
         </div>
-    );
+
+        <div className="form-group">
+          <label>Due Date:</label>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            required
+            disabled={!fees}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Fine Amount Per Month </label>
+          <input
+            type="number"
+            value={finePerMonth}
+            onChange={(e) => setFinePerMonth(e.target.value)}
+            required
+            disabled={!dueDate}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Submit Date:</label>
+          <input
+            type="date"
+            value={submitDate}
+            onChange={(e) => setSubmitDate(e.target.value)}
+            required
+            disabled={!finePerMonth}
+          />
+        </div>
+
+        <button type="submit" disabled={!isStepReady}>
+          Calculate Total
+        </button>
+        <button type="button" onClick={handleClear} style={{ backgroundColor: '#dc3545', color: '#fff', marginTop: '10px' }}>
+          Clear
+        </button>
+      </form>
+
+      {totalAmount !== null && (
+        <div className="result-box">
+          <p><strong>Months Late:</strong> {monthsLate}</p>
+          <p><strong>Fees:</strong> {Number(fees).toFixed(2)}</p>
+          <p><strong>Total Fine:</strong> {fineAmount.toFixed(2)}</p>
+          <p><strong>Fine Percentage of Fees:</strong> {((fineAmount / fees) * 100).toFixed(2)}%</p>
+          <h3>Total Payable: ₹{totalAmount.toFixed(2)}</h3>
+        </div>
+      )}
+
+
+    </div>
+  );
 };
 
 export default FeesCalculator;
