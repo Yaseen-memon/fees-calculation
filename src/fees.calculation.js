@@ -9,7 +9,7 @@ const FeesCalculator = () => {
   const [monthsLate, setMonthsLate] = useState(0);
   const [fineAmount, setFineAmount] = useState(0);
 
-  const calculateLateMonths = (due, submit) => {
+   const calculateLateMonths = (due, submit) => {
     const dueD = new Date(due);
     const submitD = new Date(submit);
 
@@ -19,7 +19,8 @@ const FeesCalculator = () => {
       (submitD.getFullYear() - dueD.getFullYear()) * 12 +
       (submitD.getMonth() - dueD.getMonth());
 
-    if (submitD.getDate() >= dueD.getDate()) {
+    // Fine tabhi lage jab submit date due date ke next month ke 5th ya uske baad ho
+    if (submitD.getDate() > dueD.getDate()) {
       months += 1;
     }
 
