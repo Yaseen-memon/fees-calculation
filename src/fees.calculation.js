@@ -176,9 +176,12 @@ const FeesCalculator = () => {
         <div className="result-box">
           <p><strong>Months Late:</strong> {monthsLate}</p>
           <p><strong>Fees:</strong> {Number(fees).toFixed(2)}</p>
+        
           <p><strong>Total Fine:</strong> {fineAmount.toFixed(2)}</p>
-          <p><strong>Fine Percentage of Fees:</strong> {((fineAmount / fees) * 100).toFixed(2)}%</p>
-          <h3>Total Payable: ₹{totalAmount.toFixed(2)}</h3>
+          <p><strong>Fine Percentage of Fees:</strong> {Math.round((fineAmount / fees) * 100)}%</p>
+
+          {/* <p><strong>Fine Percentage of Fees:</strong> {((fineAmount / fees) * 100).toFixed(2)}%</p> */}
+          <h3>Total Payable: {totalAmount.toFixed(2)}</h3>
         </div>
       )}
 
