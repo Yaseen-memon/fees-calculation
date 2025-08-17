@@ -5,23 +5,24 @@ const FeesCalculator = () => {
   const [dueDate, setDueDate] = useState('');
   const [finePerMonth, setFinePerMonth] = useState('');
   const [submitDate, setSubmitDate] = useState('');
-  const [lastDate, setLastDate] = useState(''); // ✅ new field
+  const [payChallan, setPayChallan] = useState(''); // ✅ new field
 
   const [totalAmount, setTotalAmount] = useState(null);
   const [monthsLate, setMonthsLate] = useState(0);
   const [fineAmount, setFineAmount] = useState(0);
+  const [remainingAmount, setRemainingAmount] = useState(null); // ✅ remaining
 
-  const calculateLateMonths = (due, endDate) => {
+  const calculateLateMonths = (due, submit) => {
     const dueD = new Date(due);
-    const endD = new Date(endDate);
+    const submitD = new Date(submit);
 
-    if (endD <= dueD) return 0;
+    if (submitD <= dueD) return 0;
 
     let months =
-      (endD.getFullYear() - dueD.getFullYear()) * 12 +
-      (endD.getMonth() - dueD.getMonth());
+      (submitD.getFullYear() - dueD.getFullYear()) * 12 +
+      (submitD.getMonth() - dueD.getMonth());
 
-    if (endD.getDate() > dueD.getDate()) {
+    if (submitD.getDate() > dueD.getDate()) {
       months += 1;
     }
 
@@ -31,10 +32,7 @@ const FeesCalculator = () => {
   const handleCalculate = (e) => {
     e.preventDefault();
 
-    // agar lastDate dia hai to wahi lena, warna submitDate
-    const endDate = lastDate ? lastDate : submitDate;
-
-    const lateMonths = calculateLateMonths(dueDate, endDate);
+    const lateMonths = calculateLateMonths(dueDate, submitDate);
     setMonthsLate(lateMonths);
 
     const fine = Number(finePerMonth) * lateMonths;
@@ -42,6 +40,10 @@ const FeesCalculator = () => {
 
     const total = Number(fees) + fine;
     setTotalAmount(total);
+
+    // ✅ agar challan pay kiya hai to usse minus karke remaining nikalna
+    const remaining = payChallan ? total - Number(payChallan) : null;
+    setRemainingAmount(remaining);
   };
 
   const handleClear = () => {
@@ -49,10 +51,11 @@ const FeesCalculator = () => {
     setDueDate('');
     setSubmitDate('');
     setFinePerMonth('');
-    setLastDate('');
+    setPayChallan('');
     setFineAmount(0);
     setTotalAmount(null);
     setMonthsLate(0);
+    setRemainingAmount(null);
   };
 
   const isStepReady = fees && dueDate && finePerMonth && submitDate;
@@ -170,12 +173,13 @@ const FeesCalculator = () => {
         </div>
 
         <div className="form-group">
-          <label>Last Date (Optional):</label>
+          <label>Pay Challan (Optional)</label>
           <input
-            type="date"
-            value={lastDate}
-            onChange={(e) => setLastDate(e.target.value)}
-            // disabled={!submitDate}
+            type="number"
+            value={payChallan}
+            onChange={(e) => setPayChallan(e.target.value)}
+            placeholder="Enter Challan Paid Amount"
+            disabled={!submitDate}
           />
         </div>
 
@@ -198,6 +202,10 @@ const FeesCalculator = () => {
           <p><strong>Total Fine:</strong> {fineAmount.toFixed(2)}</p>
           <p><strong>Fine Percentage of Fees:</strong> {Math.round((fineAmount / fees) * 100)}%</p>
           <h3>Total Payable: {totalAmount.toFixed(2)}</h3>
+
+          {remainingAmount !== null && (
+            <h3>Remaining Amount: {remainingAmount.toFixed(2)}</h3>
+          )}
         </div>
       )}
     </div>
