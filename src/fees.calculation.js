@@ -170,7 +170,7 @@ const FeesCalculator = () => {
         </div>
 
         <div className="form-group">
-          <label>Last Date (Optional):</label>
+          <label>Passout Date (Optional):</label>
           <input
             type="date"
             value={lastDate}
