@@ -179,7 +179,7 @@ const FeesCalculator = () => {
             value={payChallan}
             onChange={(e) => setPayChallan(e.target.value)}
             placeholder="Enter Challan Paid Amount"
-            disabled={!submitDate}
+            // disabled={!submitDate}
           />
         </div>
 
