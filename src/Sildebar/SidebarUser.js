@@ -11,16 +11,16 @@ const SidebarUser = ({ user }) => (
     }}
   >
     <img
-      src={user.avatar}
-      alt="avatar"
-      style={{
-        width: 48,
-        height: 48,
-        borderRadius: "50%",
-        marginRight: 16,
-        objectFit: "cover",
-        border: "2px solid #90caf9",
-      }}
+      // src={user.avatar}
+      // alt="Abc"
+      // style={{
+      //   width: 48,
+      //   height: 48,
+      //   borderRadius: "50%",
+      //   marginRight: 16,
+      //   objectFit: "cover",
+      //   border: "2px solid #90caf9",
+      // }}
     />
     <span style={{ fontWeight: "bold", fontSize: 18, color: "#1976d2" }}>
       {user.name}
